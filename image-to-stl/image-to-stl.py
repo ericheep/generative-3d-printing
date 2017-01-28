@@ -140,19 +140,15 @@ def create_hollow_cube(x_origin, y_origin, size, width, value):
     top_wall = create_wall(top_vertices(x_origin, y_origin, size, width, value))
 
     return mesh.Mesh(np.concatenate([left_wall.data,    right_wall.data,
-                                     bottom_wall.data,  top_wall.data]))
+                                     bottom_wall.data,  top_wall.data])).data
 
 
-def create_stls(X, ranges):
+def create_stls(X, x_range, y_range):
 
     stls = []
     coords = []
 
-    x_range, y_range = ranges
     x_length, y_length = len(X[0]), len(X)
-
-    print(ranges)
-    print(x_length, y_length)
 
     for y in range(int(np.ceil(y_length/y_range))):
         for x in range(int(np.ceil(x_length/x_range))):
@@ -210,10 +206,16 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
     if percent_resize is not None:
         X = misc.imresize(X.astype('float32'), percent_resize, 'nearest')
 
+    # changing length if breaking up image into multiple STL files
+    if stl_length is None:
+        stl_length = X.shape[1]
+    if stl_width is None:
+        stl_width = X.shape[0]
+
     # greyscale conversions
     if greyscale == "cie_y":
         X = cie_y_greyscale(X)
-    elif greyscale == "luma" or greyscale is None:
+    elif greyscale == "luma":
         X = luma_greyscale(X)
 
     # standardize
@@ -222,39 +224,37 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
     # normalize
     X = X - np.min(X)
 
-    # changing length if breaking up image into multiple STL files
-    if stl_length is None:
-        stl_length = X.shape[0]
-    if stl_width is None:
-        stl_width = X.shape[1]
-
-    print(X.shape)
-
     # hollow cube 2D list
-    hollow_cubes = [[0 for x in range(stl_width)] for y in range(stl_length)]
+    hollow_cubes = [[0 for x in range(X.shape[1])] for y in range(X.shape[0])]
 
     # creating our cubes
-    for j in range(stl_width):
-        for i in range(stl_length):
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
 
-            wall_width = (X[i, j] * cube_size * inner_wall_scale * 0.9 + 0.1)/2.0
-            wall_height = (X[i, j] * cube_size * height_scale * 0.9 + 0.1)
+            # wall_width = (X[i, j] * cube_size * inner_wall_scale * 0.9 + 0.1)/2.0
+            # wall_height = (X[i, j] * cube_size * height_scale * 0.9 + 0.1)
 
-            # if height is zero, no need to create a cube, should happen exactly once per file
-            if wall_height != 0:
-                hollow_cubes[i][j] = create_hollow_cube(i, j, cube_size, wall_width, wall_height).data
+            wall_width = (X[i, j] * cube_size * inner_wall_scale/2.0)
+            wall_height = (X[i, j] * height_scale)
+
+            if wall_width < 0.5:
+                wall_width = 0.5
+
+            if wall_height < 0.5:
+                wall_height = 0.5
+
+            hollow_cubes[i][j] = create_hollow_cube(i, j, cube_size, wall_width, wall_height)
 
     # creates our stls according to a given length
-    stls, coords = create_stls(hollow_cubes, [stl_length, stl_width])
+    stls, coords = create_stls(hollow_cubes, stl_length, stl_width)
 
     # cuts off extension
     filename, _ = os.path.splitext(filepath)
 
     # save our stls according to it's coordinate
     for idx, stl in enumerate(stls):
-        # stl_filename = os.path.join(filename, "-", str(coords[idx]), ".stl")
         stl_filename = filename + "-" + str(coords[idx]) + ".stl"
         stl.save(stl_filename)
 
 
-image_to_stl("rothko.jpg", x_resize=40, stl_length=None, stl_width=None)
+image_to_stl("rothko.jpg", x_resize=10, stl_length=10, stl_width=2)
