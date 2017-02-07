@@ -98,4 +98,4 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         stl.save(stl_filename)
 
 
-image_to_stl("rothko.jpg", x_resize=10, stl_length=None, stl_width=None)
+image_to_stl("images/rothko.jpg", x_resize=10, stl_length=None, stl_width=None)
