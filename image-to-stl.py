@@ -26,7 +26,8 @@ def cie_y_greyscale(X):
 
 
 def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_width=None,
-                 cube_size=10, inner_wall_scale=0.5, height_scale=10.0, greyscale="cie_y"):
+                 cube_size=10, inner_wall_scale=0.5, inner_wall_minimum=0.1, height_scale=10.0,
+                 greyscale="cie_y"):
     """ Converts an image file into an STL.
 
     This allows for generative 3D printable STLs to be produced from any image.
@@ -48,6 +49,8 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         The width and height of each cube created from a pixel of the image.
     inner_wall_scale : float
         The possible depth of each inner wall.
+    inner_wall_minimum : float
+        The minimum wall thickness of each cube.
     height_scale : flaot
         The possible height of each cube.
     greyscale : string
@@ -84,9 +87,11 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
 
     # normalize
     X = X - np.min(X)
+    X = X/np.max(X)
 
     stls, coords = stl_chunker.stl_chunker(X, stl_length=stl_length, stl_width=stl_width,
                                            cube_size=cube_size, inner_wall_scale=inner_wall_scale,
+                                           inner_wall_minimum=inner_wall_minimum,
                                            height_scale=height_scale)
 
     # cuts off extension
@@ -98,4 +103,11 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         stl.save(stl_filename)
 
 
-image_to_stl("images/rothko.jpg", x_resize=10, stl_length=None, stl_width=None)
+image_to_stl("images/rothko.jpg",
+             x_resize=15,
+             cube_size=5,
+             inner_wall_scale=0.50,
+             inner_wall_minimum=1,
+             height_scale=15.0,
+             stl_length=None,
+             stl_width=None)

@@ -17,7 +17,7 @@ X = np.random.randn(30)
 print(X.shape)
 
 plt.plot(X)
-# plt.subplot(211)
+plt.subplot(211)
 # plt.imshow(X[:, :], interpolation="nearest", origin="lower", cmap="viridis")
 # plt.subplot(212)
 # plt.imshow(X[:, :, 1], interpolation="nearest", origin="lower", cmap="viridis")
