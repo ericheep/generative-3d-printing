@@ -104,10 +104,10 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
 
 
 image_to_stl("images/rothko.jpg",
-             x_resize=15,
-             cube_size=5,
-             inner_wall_scale=0.50,
-             inner_wall_minimum=1,
-             height_scale=15.0,
-             stl_length=None,
-             stl_width=None)
+             x_resize=20,
+             cube_size=30,
+             inner_wall_scale=0.95,
+             inner_wall_minimum=2.0,
+             height_scale=50.0,
+             stl_length=5,
+             stl_width=5)
