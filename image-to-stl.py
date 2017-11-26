@@ -27,7 +27,7 @@ def cie_y_greyscale(X):
 
 def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_width=None,
                  cube_size=10, inner_wall_scale=0.5, inner_wall_minimum=0.1, height_scale=10.0,
-                 greyscale="cie_y"):
+                 greyscale="cie_y", invert_values=False, invert_thickness=False):
     """ Converts an image file into an STL.
 
     This allows for generative 3D printable STLs to be produced from any image.
@@ -89,10 +89,14 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
     X = X - np.min(X)
     X = X/np.max(X)
 
+    if invert_values:
+        X = (X * -1.0) + 1.0
+
     stls, coords = stl_chunker.stl_chunker(X, stl_length=stl_length, stl_width=stl_width,
                                            cube_size=cube_size, inner_wall_scale=inner_wall_scale,
                                            inner_wall_minimum=inner_wall_minimum,
-                                           height_scale=height_scale)
+                                           height_scale=height_scale,
+                                           invert_thickness=invert_thickness)
 
     # cuts off extension
     filename, _ = os.path.splitext(filepath)
@@ -103,11 +107,15 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         stl.save(stl_filename)
 
 
-image_to_stl("images/rothko.jpg",
-             x_resize=20,
-             cube_size=30,
+image_to_stl("images/klint-red.jpg",
+             x_resize=24,
+             cube_size=20,
              inner_wall_scale=0.95,
              inner_wall_minimum=2.0,
-             height_scale=50.0,
-             stl_length=5,
-             stl_width=5)
+             height_scale=25.0,
+             stl_length=8,
+             stl_width=8,
+             # stl_length=None,
+             # stl_width=None,
+             invert_values=False,
+             invert_thickness=False)
