@@ -107,15 +107,15 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         stl.save(stl_filename)
 
 
-image_to_stl("images/klint-red.jpg",
-             x_resize=24,
-             cube_size=20,
+image_to_stl("images/hilma-square.jpg",
+             x_resize=32,
+             cube_size=19,
              inner_wall_scale=0.95,
              inner_wall_minimum=2.0,
              height_scale=25.0,
-             stl_length=8,
-             stl_width=8,
-             # stl_length=None,
-             # stl_width=None,
+             # stl_length=8,
+             # stl_width=8,
+             stl_length=None,
+             stl_width=None,
              invert_values=False,
              invert_thickness=False)
