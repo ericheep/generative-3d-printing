@@ -108,14 +108,14 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
 
 
 image_to_stl("images/hilma-square.jpg",
-             x_resize=32,
-             cube_size=19,
+             x_resize=36,
+             cube_size=8,
              inner_wall_scale=0.95,
-             inner_wall_minimum=2.0,
-             height_scale=25.0,
-             # stl_length=8,
-             # stl_width=8,
-             stl_length=None,
-             stl_width=None,
-             invert_values=False,
-             invert_thickness=False)
+             inner_wall_minimum=1.5,
+             height_scale=35.0,
+             # stl_length=None,
+             # stl_width=None,
+             stl_length=18,
+             stl_width=18,
+             invert_values=True,
+             invert_thickness=True)
