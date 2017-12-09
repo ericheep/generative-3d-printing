@@ -60,6 +60,10 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
     # reads image
     X = misc.imread(filepath)
 
+    # for pngs and those pesky alpha layers
+    if X.shape[2] > 3:
+        X = X[:, :, :3]
+
     # resizing
     percent_resize = None
     if x_resize is not None:
@@ -107,15 +111,15 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
         stl.save(stl_filename)
 
 
-image_to_stl("images/hilma-square.jpg",
-             x_resize=36,
+image_to_stl("images/marilyn.png",
+             x_resize=144,
              cube_size=8,
              inner_wall_scale=0.95,
              inner_wall_minimum=1.5,
              height_scale=35.0,
              # stl_length=None,
              # stl_width=None,
-             stl_length=18,
-             stl_width=18,
+             stl_length=48,
+             stl_width=47,
              invert_values=True,
              invert_thickness=True)
