@@ -153,6 +153,13 @@ def create_stls(X, x_range, y_range):
 def stl_chunker(X, stl_length=None, stl_width=None, cube_size=10,
                 inner_wall_scale=0.5, inner_wall_minimum=1, height_scale=10.0,
                 invert_thickness=False):
+
+    if np.ndim(X) == 2:
+        T = X
+    if np.ndim(X) == 3:
+        T = X[:, :, 1]
+        X = X[:, :, 0]
+
     # hollow cube 2D list
     hollow_cubes = [[0 for x in range(X.shape[1])] for y in range(X.shape[0])]
 
@@ -163,7 +170,7 @@ def stl_chunker(X, stl_length=None, stl_width=None, cube_size=10,
     for i in range(X.shape[0]):
         for j in range(X.shape[1]):
 
-            wall_value = X[i, j]
+            wall_value = T[i, j]
 
             if invert_thickness:
                 wall_value = wall_value * -1.0 + 1.0

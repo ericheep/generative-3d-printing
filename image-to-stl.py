@@ -105,7 +105,7 @@ def image_to_stl(filepath, x_resize=None, y_resize=None, stl_length=None, stl_wi
     # cuts off extension
     filename, _ = os.path.splitext(filepath)
 
-    # save our stls according to it's coordinate
+    # save our stls according to its coordinate
     for idx, stl in enumerate(stls):
         stl_filename = filename + "-" + str(coords[idx]) + ".stl"
         stl.save(stl_filename)
